@@ -20,7 +20,7 @@ public class Utilities
             File.Create(FileName).Dispose();
         }
         using StreamWriter sw = File.AppendText(FileName);
-        sw.WriteLine("Reversal Detail");
+        sw.WriteLine("Export Content");
         sw.WriteLine("========================================");
         sw.WriteLine($"START ===> {DateTime.Now}");
         sw.WriteLine($"LOG DATA1 ===> {logData.ToModel<WorkerConfig>().APIURL1} : {logData.ToModel<WorkerConfig>().APIURL1Method} : {logData.ToModel<WorkerConfig>().APIURL1DelayInterval}");
