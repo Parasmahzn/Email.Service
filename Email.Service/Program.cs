@@ -5,6 +5,7 @@ IHost host = Host.CreateDefaultBuilder(args)
     {
         services.AddHostedService<EmailWorker>();
     })
+    .UseWindowsService()
     .Build();
 
 await host.RunAsync();
