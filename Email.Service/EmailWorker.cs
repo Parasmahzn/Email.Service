@@ -24,11 +24,17 @@ namespace Email.Service
 
                 var apiResp = await Utilities.MakeAPICall(new API.Request()
                 {
-                    ApiType = SD.ApiType.GET,
-                    Url = workerConfig.FirstOrDefault()?.APIURL!
+                    ApiType = SD.ApiType.POST,
+                    Url = workerConfig.FirstOrDefault()!.APIURL,
+                    Data = new
+                    {
+                        To = "parasmahzn@gmail.com",
+                        Subject = "Send A Test Email",
+                        Body = "<h1> This is a test email sent. </h1>"
+                    }
                 });
-                if (apiResp.Success)
-                    Utilities.ExportServiceLog(apiResp.Stringyfy());
+
+                Utilities.ExportServiceLog(apiResp.Stringyfy());
 
                 await Task.Delay(1000, stoppingToken);
             }

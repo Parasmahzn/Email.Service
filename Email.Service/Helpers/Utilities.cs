@@ -7,11 +7,11 @@ public class Utilities
 {
     public static void ExportServiceLog(string logData)
     {
-        var apiConfigLst = new List<WorkerConfig>();
-        if (!string.IsNullOrEmpty(logData))
-        {
-            apiConfigLst = logData.ToModel<List<WorkerConfig>>();
-        }
+        //var apiConfigLst = new List<WorkerConfig>();
+        //if (!string.IsNullOrEmpty(logData))
+        //{
+        //    apiConfigLst = logData.ToModel<List<WorkerConfig>>();
+        //}
 
         string ExceptionLogPath = Path.Combine(Directory.GetCurrentDirectory(), "App_Data\\");
         string FileName = ExceptionLogPath + "Log" + DateTime.Now.ToString("yyyyMMdd") + ".txt";
@@ -24,9 +24,7 @@ public class Utilities
         sw.WriteLine("Export Content");
         sw.WriteLine("========================================");
         sw.WriteLine($"START ===> {DateTime.Now}");
-        sw.WriteLine($"LOG DATA1 ===> {apiConfigLst[0].APIURL} : {apiConfigLst[0].APIURLMethod} : {apiConfigLst[0].APIURLDelayInterval}");
-        sw.WriteLine($"LOG DATA2 ===> {apiConfigLst[1].APIURL} : {apiConfigLst[1].APIURLMethod} : {apiConfigLst[1].APIURLDelayInterval}");
-        sw.WriteLine($"LOG DATA3 ===> {apiConfigLst[2].APIURL} : {apiConfigLst[2].APIURLMethod} : {apiConfigLst[2].APIURLDelayInterval}");
+        sw.WriteLine($"Response Data ===> {logData}");
         sw.WriteLine($"END ===> {DateTime.Now} ");
         sw.WriteLine();
         sw.WriteLine();
@@ -37,7 +35,7 @@ public class Utilities
         try
         {
             var client = new HttpClient();
-            HttpRequestMessage message = new HttpRequestMessage();
+            var message = new HttpRequestMessage();
             message.Headers.Add("Accept", "application/json");
             message.RequestUri = new Uri(apiRequest.Url);
             client.DefaultRequestHeaders.Clear();
@@ -59,8 +57,8 @@ public class Utilities
             return new API.Response()
             {
                 Success = apiResponse.IsSuccessStatusCode,
-                Message = apiResponse.ReasonPhrase!.ToString(),
-                Result = apiContent,
+                Message = apiResponse.IsSuccessStatusCode ? "success" : "failed",
+                Result = !apiResponse.IsSuccessStatusCode ? apiResponse.ReasonPhrase! : apiContent,
                 ErrorMessages = !apiResponse.IsSuccessStatusCode ? new List<string> { apiResponse.ReasonPhrase } : new()
             };
         }
