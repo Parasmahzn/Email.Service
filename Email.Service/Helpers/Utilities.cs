@@ -71,4 +71,21 @@ public class Utilities
             };
         }
     }
+
+    public static async Task<List<EmailModel>> GetEmailContent(bool fromFile, bool fromDb, string dataSource = "")
+    {
+        var emailContent = new List<EmailModel>();
+
+        if (fromFile)
+        {
+
+        }
+
+        if (fromDb)
+        {
+
+        }
+
+        return emailContent;
+    }
 }
