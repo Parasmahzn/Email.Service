@@ -9,8 +9,8 @@ namespace Email.Service
         private readonly ILogger<EmailWorker> _logger;
         private readonly IConfiguration _configuration;
         private readonly IEmailConfiguration _emailConfiguration;
-        private readonly List<WorkerConfig> workerConfig = new();
-        private readonly EmailSetup emailSetup = new();
+        private readonly List<WorkerConfig> workerConfig;
+        private readonly EmailSetup emailSetup;
 
         public EmailWorker(ILogger<EmailWorker> logger, IConfiguration configuration, IEmailConfiguration emailConfiguration)
         {
@@ -32,19 +32,19 @@ namespace Email.Service
                     ? _configuration.GetConnectionString("DefaultConnection")
                     : string.Empty);
 
-                //var apiResp = await Utilities.MakeAPICall(new API.Request()
-                //{
-                //    ApiType = SD.ApiType.POST,
-                //    Url = workerConfig.FirstOrDefault()!.APIURL,
-                //    Data = new
-                //    {
-                //        To = "parasmahzn@gmail.com",
-                //        Subject = "Send A Test Email",
-                //        Body = "<h1> This is a test email sent. </h1>"
-                //    }
-                //});
-
-                //Utilities.ExportServiceLog(apiResp.Stringyfy());
+                if (emailDataResp != null && emailDataResp.Count > 1)
+                {
+                    foreach (var item in emailDataResp)
+                    {
+                        var apiResp = await Utilities.MakeAPICall(new API.Request()
+                        {
+                            ApiType = SD.ApiType.POST,
+                            Url = workerConfig.FirstOrDefault()!.APIURL,
+                            Data = item
+                        });
+                        Utilities.ExportServiceLog(apiResp.Stringyfy());
+                    }
+                }
 
                 await Task.Delay(1000, stoppingToken);
             }

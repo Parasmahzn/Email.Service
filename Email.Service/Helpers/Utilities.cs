@@ -1,4 +1,5 @@
 ﻿using Email.Service.Models;
+using Microsoft.VisualBasic.FileIO;
 using System.Text;
 
 namespace Email.Service.Helpers;
@@ -78,7 +79,34 @@ public class Utilities
 
         if (fromFile)
         {
+            string appDataPath = Path.Combine(Directory.GetCurrentDirectory(), "App_Data");
+            string csvFilePath = Path.Combine(appDataPath, "Email.csv");
 
+            // Read CSV file
+            using TextFieldParser parser = new(csvFilePath);
+            parser.TextFieldType = FieldType.Delimited;
+            parser.SetDelimiters(",");
+
+            int currentRow = 0;
+
+            while (!parser.EndOfData)
+            {
+                currentRow++;
+
+                string[] fields = parser.ReadFields();
+
+                if (fields != null && currentRow > 1 && fields.Length >= 3) // Skip the first row
+                {
+                    EmailModel emailModel = new EmailModel
+                    {
+                        To = fields[0],
+                        Subject = fields[1],
+                        Body = fields[2]
+                    };
+
+                    emailContent.Add(emailModel);
+                }
+            }
         }
 
         if (fromDb)
